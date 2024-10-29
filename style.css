@@ -28,6 +28,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 body {
@@ -36,6 +37,8 @@ body {
 
     justify-content: center;
     padding: 0.5rem;
+
+    zoom: 1.8;
 }
 
 section {
