@@ -7,27 +7,42 @@
         <title>Cookie Type Game</title>
     </head>
     <body>
-        <main id="app">
-            <section id="language">
-                <label>Language</label>
-                <select title="Language" id="select-language">
-                <option selected value="english">English</option>
-                <option value="spanish">Spanish</option>
-                </select>
-            </section>
+        <main id="app" class="app">
+            <header id="header">
+                <section id="language" class="languageSection">
+                    <select title="Language" id="select-language">
+                    <option selected value="english">English</option>
+                    <option value="spanish">Spanish</option>
+                    </select>
+                </section>
+                <div class="time-switcher" id="timeSwitcher">
+                    <button class="time-btn active" value="30" id="time-30">30s</button>
+                    <button class="time-btn" value="60" id="time-60">60s</button>
+                    <button class="time-btn" value="90" id="time-90">90s</button>
+                </div>
+        </header>
             <section id="game">
-                <time>30</time>
+                <div class="info-bar">
+                    <time></time>
+                    <div class="progress-bar">
+                        <div class="progress" id="progressbar"></div>
+                    </div>
+                </div>
                 <p></p>
                 <input autofocus>
             </section>
-            <section id="results">
-                <h2>Wpm</h2>
-                <h3 id="results-wpm"></h3>
+            <section id="results" class="results-section">
+                <div class="result">
+                    <h2>Wpm</h2>
+                    <h3 id="results-wpm"></h3>
+                </div>
 
-                <h2>accuracy</h2>
-                <h3 id="results-accuracy"></h3>
+                <div class="result">
+                    <h2>Accuracy</h2>
+                    <h3 id="results-accuracy"></h3>
+                </div>
 
-                <button id="reload-button">
+                <button id="restart-btn" class="restart-btn">
                     <svg
                         width="24"
                         height="24"

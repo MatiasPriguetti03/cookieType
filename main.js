@@ -10,15 +10,23 @@ const $game = document.querySelector("#game");
 const $results = document.querySelector("#results");
 const $wpm = $results.querySelector("#results-wpm");
 const $accuracy = $results.querySelector("#results-accuracy");
-const $button = document.querySelector("#reload-button");
+const $button = document.querySelector("#restart-btn");
+const $progressBar = document.getElementById("progressbar");
 
-const INITIAL_TIME = 30;
+const $time30 = document.getElementById("time-30");
+const $time60 = document.getElementById("time-60");
+const $time90 = document.getElementById("time-90");
+
+const $timeSwitch = document.getElementById("timeSwitcher");
+let activeTime = $timeSwitch.querySelector(".active");
+
+var initialTime = activeTime.value;
 
 let words = [];
 
-let currentTime = INITIAL_TIME;
+var currentTime = initialTime;
 
-let INITIAL_WORDS = WORDS_EN;
+let initialWords = WORDS_EN;
 let intervalId;
 initEvents();
 
@@ -26,11 +34,11 @@ var selectedLenguage = document.getElementById("select-language");
 
 function onChange() {
     gameOver();
-    var text = selectedLenguage.options[selectedLenguage.selectedIndex].text;
+    let text = selectedLenguage.options[selectedLenguage.selectedIndex].text;
     if (text.toLowerCase() == "english") {
-        INITIAL_WORDS = WORDS_EN;
+        initialWords = WORDS_EN;
     } else if (text.toLowerCase() == "spanish") {
-        INITIAL_WORDS = WORDS_ES;
+        initialWords = WORDS_ES;
     }
 
     initGame();
@@ -39,12 +47,13 @@ selectedLenguage.onchange = onChange;
 onChange();
 
 function initGame() {
-    $game.style.display = "flex";
     $results.style.display = "none";
+    $input.removeAttribute("disabled");
+
     if(intervalId) clearInterval(intervalId);
 
-    words = INITIAL_WORDS.toSorted(() => Math.random() - 0.5).slice(0, 50);
-    currentTime = INITIAL_TIME;
+    words = initialWords.toSorted(() => Math.random() - 0.5).slice(0, 50);
+    currentTime = initialTime;
 
     $time.textContent = currentTime;
 
@@ -69,9 +78,13 @@ function initGame() {
     intervalId = setInterval(() => {
         currentTime--;
         $time.textContent = currentTime;
+        let percentage = ((currentTime / initialTime) * 100).toFixed(2);
+
+        $progressBar.style.width = `${percentage}%`;
 
         if (currentTime === 0) {
             clearInterval(intervalId);
+            $progressBar.style.width = "100%";
             gameOver();
         }
     }, 1000);
@@ -108,8 +121,11 @@ function onKeyUp() {
         $nextActiveLetter.classList.add("active");
     } else {
         $currentLetter.classList.add("active", "is-last");
-        // TODO: gameover si no hay próxima palabra
     }
+
+    if ($currentWord.nextElementSibling === null && $currentLetter.classList.contains("is-last"))
+        gameOver();
+    
 }
 
 function playFortuneSound() {
@@ -191,11 +207,25 @@ function initEvents() {
     $input.addEventListener("keydown", onKeyDown);
     $input.addEventListener("keyup", onKeyUp);
     $button.addEventListener("click", initGame);
+
+    $timeSwitch.querySelectorAll("button").forEach(($button) => {
+        $button.addEventListener("click", () => {
+            activeTime.classList.remove("active");
+            activeTime = $button;
+            activeTime.classList.add("active");
+            initialTime = activeTime.value;
+            initGame();
+        });
+    });
 }
 
 function gameOver() {
-    $game.style.display = "none";
     $results.style.display = "flex";
+
+    $input.setAttribute("disabled", true);
+    clearInterval(intervalId);
+    $time.textContent = currentTime;
+
 
     const correctWords = $paragraph.querySelectorAll("x-word.correct").length;
     const correctLetter =
@@ -208,7 +238,7 @@ function gameOver() {
     const accuracy =
         totalLetters > 0 ? (correctLetter / totalLetters) * 100 : 0;
 
-    const wpm = (correctWords * 60) / INITIAL_TIME;
-    $wpm.textContent = wpm;
+    const wpm = (correctWords * initialTime) / (initialTime - currentTime);
+    $wpm.textContent = wpm.toFixed(2);
     $accuracy.textContent = `${accuracy.toFixed(2)}%`;
 }
