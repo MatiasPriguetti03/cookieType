@@ -3,7 +3,7 @@
     font-weight: 400;
 
     --green: #00b755;
-    --yellow: #f6590b;
+    --orange: #f6590b;
     --red: #ca4754;
     --black: #222;
     --gray: #999;
@@ -27,11 +27,11 @@ section {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    max-width: 500px;
+    max-width: 600px;
 }
 
 time {
-    color: var(--yellow);
+    color: var(--orange);
 }
 
 input {
@@ -56,7 +56,7 @@ x-letter {
 
     &.active::before {
         content: "|";
-        color: var(--yellow);
+        color: var(--orange);
         font-size: 14px;
         position: absolute;
         left: -65%;
@@ -97,6 +97,22 @@ x-word {
 
 #game {
     display: flex;
+}
+
+#language {
+    display: flex;
+    align-items: center;
+    color: var(--orange);
+    gap: 8px;
+}
+#select-language {
+    width: 135px;
+    background-color: var(--black);
+    color: var(--gray);
+    option {
+        background-color: var(--black);
+        color: var(--gray);
+    }
 }
 
 #results {

@@ -1,5 +1,6 @@
 import "./style.css";
-import { words as INITIAL_WORDS } from "./data.js";
+import { words as WORDS_EN } from "./dataEN.js";
+import { palabras as WORDS_ES } from "./dataES.js";
 
 const $time = document.querySelector("time");
 const $paragraph = document.querySelector("p");
@@ -17,17 +18,32 @@ let words = [];
 
 let currentTime = INITIAL_TIME;
 
-initGame();
+let INITIAL_WORDS = WORDS_EN;
+let intervalId;
 initEvents();
+
+var selectedLenguage = document.getElementById("select-language");
+
+function onChange() {
+    gameOver();
+    var text = selectedLenguage.options[selectedLenguage.selectedIndex].text;
+    if (text.toLowerCase() == "english") {
+        INITIAL_WORDS = WORDS_EN;
+    } else if (text.toLowerCase() == "spanish") {
+        INITIAL_WORDS = WORDS_ES;
+    }
+
+    initGame();
+}
+selectedLenguage.onchange = onChange;
+onChange();
 
 function initGame() {
     $game.style.display = "flex";
     $results.style.display = "none";
-    $input.value = "";
+    if(intervalId) clearInterval(intervalId);
 
-    words = INITIAL_WORDS.toSorted(
-        () => Math.random() - 0.5
-    ).slice(0, 32);
+    words = INITIAL_WORDS.toSorted(() => Math.random() - 0.5).slice(0, 50);
     currentTime = INITIAL_TIME;
 
     $time.textContent = currentTime;
@@ -48,7 +64,9 @@ function initGame() {
     $firstWord.classList.add("active");
     $firstWord.querySelector("x-letter").classList.add("active");
 
-    const intervalId = setInterval(() => {
+    if(intervalId) clearInterval(intervalId);
+
+    intervalId = setInterval(() => {
         currentTime--;
         $time.textContent = currentTime;
 
@@ -94,6 +112,12 @@ function onKeyUp() {
     }
 }
 
+function playFortuneSound() {
+    const audio = new Audio("/sounds/fortune.mp3");
+    audio.volume = 0.1;
+    audio.play();
+}
+
 function onKeyDown(event) {
     const $currentWord = $paragraph.querySelector("x-word.active");
     const $currentLetter = $currentWord.querySelector("x-letter.active");
@@ -114,11 +138,13 @@ function onKeyDown(event) {
         $input.value = "";
 
         const hasMissedLetters =
-            $currentWord.querySelectorAll("x-letter:not(.correct)").length >
-            0;
+            $currentWord.querySelectorAll("x-letter:not(.correct)").length > 0;
 
         const classToAdd = hasMissedLetters ? "marked" : "correct";
         $currentWord.classList.add(classToAdd);
+
+        if (!$currentWord.classList.contains("marked")) playFortuneSound();
+        
 
         return;
     }
@@ -138,8 +164,7 @@ function onKeyDown(event) {
             $prevWord.classList.remove("marked");
             $prevWord.classList.add("active");
 
-            const $letterToGo =
-                $prevWord.querySelector("x-letter:last-child");
+            const $letterToGo = $prevWord.querySelector("x-letter:last-child");
 
             $currentLetter.classList.remove("active");
             $letterToGo.classList.add("active");
@@ -162,7 +187,6 @@ function onKeyDown(event) {
 function initEvents() {
     document.addEventListener("keydown", () => {
         $input.focus();
-
     });
     $input.addEventListener("keydown", onKeyDown);
     $input.addEventListener("keyup", onKeyUp);
