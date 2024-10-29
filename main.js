@@ -113,9 +113,9 @@ function onKeyUp() {
 }
 
 function playFortuneSound() {
-    const audio = new Audio("/sounds/fortune.mp3");
+    const audio = new Audio("./sounds/fortune.mp3");
     audio.volume = 0.1;
-    audio.play();
+    audio.play().catch(error => console.error('Error al reproducir:', error));
 }
 
 function onKeyDown(event) {
