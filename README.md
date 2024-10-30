@@ -8,4 +8,5 @@ A simple game where you have to type the words that appear on the screen before 
 - calculate WPM and accuracy.
 - Detect wrong letters and the skip of them.
 
-![Uploading 530shots_so.jpeg…]()
+
+![](https://github.com/user-attachments/assets/d8761670-fc9a-43f0-b9c8-754e0c3cfd51)
