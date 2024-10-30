@@ -75,6 +75,8 @@ function initGame() {
 
     if(intervalId) clearInterval(intervalId);
 
+    $progressBar.style.width = `100%`;
+    
     intervalId = setInterval(() => {
         currentTime--;
         $time.textContent = currentTime;
