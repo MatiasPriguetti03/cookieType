@@ -84,7 +84,7 @@ function initGame() {
 
         if (currentTime === 0) {
             clearInterval(intervalId);
-            $progressBar.style.width = "100%";
+            $progressBar.style.width = "0%";
             gameOver();
         }
     }, 1000);
@@ -225,7 +225,6 @@ function gameOver() {
     $input.setAttribute("disabled", true);
     clearInterval(intervalId);
     $time.textContent = currentTime;
-
 
     const correctWords = $paragraph.querySelectorAll("x-word.correct").length;
     const correctLetter =
