@@ -109,8 +109,8 @@ function onKeyUp() {
     $input.value.split("").forEach((char, index) => {
         const $letter = $allLetters[index];
         const letterToCheck = currentWord[index];
-
-        const isCorrect = char === letterToCheck;
+        
+        const isCorrect = char.toLowerCase() === letterToCheck.toLowerCase();
         const letterClass = isCorrect ? "correct" : "incorrect";
         $letter.classList.add(letterClass);
     });
